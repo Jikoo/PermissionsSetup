@@ -1,5 +1,6 @@
 package com.github.jikoo.permissionssetup;
 
+import java.util.Collection;
 import java.util.IllegalFormatException;
 import java.util.List;
 
@@ -45,7 +46,13 @@ public class PermissionsSetup extends JavaPlugin {
 	}
 
 	private void addCommandPermissions(JavaPlugin plugin, String format, List<String> wildcards) {
-		for (String command : plugin.getDescription().getCommands().keySet()) {
+		Collection<String> commands = plugin.getDescription().getCommands().keySet();
+
+		if (commands.isEmpty()) {
+			return;
+		}
+
+		for (String command : commands) {
 			String perm = String.format(format, command);
 			// Note: Bukkit#getPluginCommand will return a different plugin's command if overridden.
 			// This method will always get the correct command.
