@@ -1,0 +1,20 @@
+# Configuration for adding permissions to commands to plugins that fail to do so.
+# Commands must be declared in the plugin's plugin.yml!
+# 
+# To add another plugin, create a section using the name of the plugin.
+# 
+
+plugins:
+  # Name of the plugin. This is case-sensitive, capitalize properly!
+  exAMPLE:
+    # format is the permission format, where %s is the name of the command
+    # Ex: 'example.%s' results in the permission 'example.test' being generated for /test
+    format: 'example.%s'
+    # Wildcards are optional parent nodes. This section can be an empty list or excluded entirely.
+    wildcards:
+    - example.*
+    - example.admin
+  'Essentials':
+    format: 'essentials.%s'
+    wildcards:
+    - essentials.*

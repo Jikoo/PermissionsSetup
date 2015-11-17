@@ -1,0 +1,5 @@
+name: PermissionsSetup
+description: Properly set up permissions for plugins that just don't do it right.
+version: 0.0.1
+author: Jikoo
+main: com.github.jikoo.permissionssetup.PermissionsSetup
