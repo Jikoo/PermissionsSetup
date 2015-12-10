@@ -10,11 +10,22 @@ plugins:
     # format is the permission format, where %s is the name of the command
     # Ex: 'example.%s' results in the permission 'example.test' being generated for /test
     format: 'example.%s'
-    # Wildcards are optional parent nodes. This section can be an empty list or excluded entirely.
-    wildcards:
+    # Parent nodes are optional. This section can be an empty list or excluded entirely.
+    # Parent nodes grant the automatically generated child nodes.
+    parents:
     - example.*
     - example.admin
   'Essentials':
     format: 'essentials.%s'
-    wildcards:
+    parents:
     - essentials.*
+
+commands:
+  # Name of the command
+  example:
+    # Permission for the command
+    permission: example.example
+    # Parent nodes for the command
+    parents:
+    - example.*
+    - example.admin
