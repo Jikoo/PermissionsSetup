@@ -1,10 +1,12 @@
 package com.github.jikoo.permissionssetup;
 
+import java.lang.reflect.Method;
 import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -14,11 +16,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class PermissionsSetup extends JavaPlugin {
 
+	private CommandMap commandMap;
+
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
 
-		new PostEnableSetup().runTask(this);
+		/*
+		 * We run on a 1 tick delay not only so that all plugins have had an opportunity to set up,
+		 * but so that Bukkit's aliasing system has finished assigning aliases to commands. A 0 tick
+		 * delayed task will run after all plugins are loaded but before aliases are fully set up.
+		 */
+		new PostEnableSetup().runTaskLater(this, 1);
 
 	}
 
@@ -77,6 +86,7 @@ public class PermissionsSetup extends JavaPlugin {
 							commandSection.getStringList("parents"));
 				}
 			}
+			commandMap = null;
 		}
 
 	}
@@ -112,9 +122,9 @@ public class PermissionsSetup extends JavaPlugin {
 	}
 
 	private void addCommandPermissions(String command, String permission, List<String> parents) {
-		PluginCommand cmd = getServer().getPluginCommand(command);
+		Command cmd = fetchPluginCommand(command);
 		if (cmd == null) {
-			getLogger().warning(command + " is not a registered plugin command!");
+			getLogger().warning(command + " is not a registered command!");
 			return;
 		}
 		cmd.setPermission(permission);
@@ -129,6 +139,24 @@ public class PermissionsSetup extends JavaPlugin {
 		for (String parent : parents) {
 			child.addParent(parent, true);
 		}
+	}
+
+	private Command fetchPluginCommand(String command) {
+		if (commandMap != null) {
+			return commandMap.getCommand(command);
+		}
+		Command cmd = getServer().getPluginCommand(command);
+		if (cmd != null) {
+			return cmd;
+		}
+		try {
+			Method getCommandMap = getServer().getClass().getMethod("getCommandMap");
+			commandMap = (CommandMap) getCommandMap.invoke(getServer());
+			return commandMap.getCommand(command);
+		} catch (Exception e) {
+			getLogger().warning("Failed to fetch CommandMap from CraftServer, nonstandard and vanilla commands are not editable.");
+		}
+		return null;
 	}
 
 }

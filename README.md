@@ -49,7 +49,7 @@ For individual commands, simply add more sections by command name.
 PermissionsSetup will attempt to match a command using aliases if provided, but makes no guarantee that it can properly, and may fall back to whatever plugin command by the same name is taking precedence.  
 As with the plugins section, parents is an optional list of parent nodes.  
 
-Note that this will not work with commands provided by the server implementation and not plugins.
+You can also use this section to edit permissions for commands added by the server implementation, however, server updates may break this functionality.
 ```
 commands:
   # Name of the command
