@@ -1,5 +1,6 @@
 name: PermissionsSetup
 description: Properly set up permissions for plugins that just don't do it right.
-version: 1.1.0
+version: "${project.version}"
 author: Jikoo
 main: com.github.jikoo.permissionssetup.PermissionsSetup
+api-version: "1.13"
